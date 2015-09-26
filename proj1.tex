@@ -37,6 +37,40 @@ literate={~} {\texttildelow}{1}}
 \maketitle
 \thispagestyle{fancy}
 
+\section{Decision Variables}
 
+The client has proposed two strategies:
+
+\begin{enumerate}
+\item Focus vaccination efforts on the ``most connected''.
+\item Focus vaccination efforts on the most frail or susceptible.
+\end{enumerate}
+
+In our models, we want to express our choice of policy as a ``decision variable''.
+Since we will be recieving 4000 vaccinations a month, our policy recommendation
+	will be how to distribute those 4000 vaccinations.
+If we identify $n$ categories of Ithacans, each month we will provide 
+	recommendations on which fraction of the 4000 vaccines to give to 
+	each category of Ithacans.
+
+We should note that each model won't necessarily divide the population into the
+	same number of categories.
+Each one will provide a different recommendation for the health officials.
+
+\section{Evaluating Models}
+
+Once we chose parameters for our model, we will run it and show its predictions.
+We expect that models should at least model the total number of sick
+	individuals.
+The model might also keep track of how many individuals die.
+We have thought of three different ways of evaluating our model:
+
+\begin{enumerate}
+\item Total Deaths
+\item Total Person-Days Spent Sick
+\item Time Until Disease is Eradicated
+\end{enumerate}
+
+Note that the models may only provide predictions for some of these criteria.
 
 \end{document}
