@@ -4,6 +4,7 @@
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{tikz}
 
 \pagestyle{fancy}
 \fancyhead{}
@@ -72,5 +73,95 @@ We have thought of three different ways of evaluating our model:
 \end{enumerate}
 
 Note that the models may only provide predictions for some of these criteria.
+
+\section{Simple Continuous Model}
+
+First, we propose a deterministic model which doesn't divide the population 
+	into sections at all.
+This model will help give us an idea of what the effect of dividing
+	the population into sections will be.
+In addition, it can give us an idea of how vaccination affects the spread of
+	disease within a population.
+
+\subsection{Disease Spread with No Vaccine}
+
+We include this derivation of the logistic model for disease spread
+	to compare with our derivation of the modified logistic model
+	for disease spread and vaccination.
+
+Suppose there are two groups of people, with $S$ representing the number of 
+	sick people, and $H$ represnting the number of healthy people.
+Suppose the probability of a single healthy person becoming sick is proportional
+	only to the total number of sick people.
+Since there are $H$ healthy people, the expected number of healthy people
+	who become sick should be proportional to $S H$.
+This model does not take into account recovery from sickness.
+If we introduce a parameter $r$, we can express this relationship as a system
+	of differential equations:
+
+\begin{align*}
+\frac{dH}{dt} & = - r S H \\
+\frac{dS}{dt} & = r S H \\
+\end{align*}
+
+Notice that the total number of people, $S + H$, is conserved, i.e.,
+
+\[ \frac{d}{dt} \left( S + H \right) = \frac{dS}{dt} + \frac{dH}{dt}
+	= r S H - r S H = 0 \]
+
+If we introduce another parameter, $K$, to represent the total population,
+	such that $S + H = K$ for all time, then the differential equations
+	can be decoupled:
+
+\begin{align*}
+\frac{dH}{dt} & = - r (K - H) H \\
+\frac{dS}{dt} & = r S (K - S) \\
+\end{align*}
+
+These are two independant logistic models.
+
+\subsection{Diease Spread with Vaccine}
+
+Suppose we introduce a third group, $V$, representing people who are vaccinated	
+	against the disease.
+Suppose we randomly vaccinate members of the healthy population,
+	a constant number each time step.
+This introduces a third parameter, $r_v$, the rate of vaccinations.
+The vaccinated population isn't seceptible to the disease.
+This process is modeled by the following system of diffential equations:
+
+\begin{align*}
+\frac{dS}{dt} & = r S H \\
+\frac{dH}{dt} & = - r S H - r_v \\
+\frac{dV}{dt} & = r_v
+\end{align*}
+
+This model is accurate only if all three of the populations remain
+	positive.
+This is important to remember.
+The number of healthy people will always be decreasing, so once
+	the number of healthy people hits zero, we stop the model.
+The sick people stay sick, and the vaccinated people stay vaccinated.
+
+The number of vaccinated people as a function of time is:
+
+\[ V(t) = r_v t \]
+
+Again, we find the conserved quantity $\left( S + H + V \right)$ and
+	name it $K$.
+For the model to be valid, we need $H = K - S - V \geq 0$.
+Therefore, the model is valid as long as:
+
+\[ K \geq S + r_v t \]
+
+We have now made these differential equations independant:
+
+\begin{align*}
+\frac{dS}{dt} & = r S \left( K - S - r_v t \right)\\
+\frac{dH}{dt} & = - r H \left( K - H - r_v t \right) - r_v \\
+\frac{dV}{dt} & = r_v t
+\end{align*}
+
+
 
 \end{document}
