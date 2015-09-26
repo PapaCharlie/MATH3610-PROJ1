@@ -12,34 +12,56 @@ num_teens     = 2*ithaca_pop/5;
 num_adults    = 2*ithaca_pop/5;
 num_seniors   = ithaca_pop/10;
 
-% Values to pass to person classdef
-child   = 1;
-teen    = 2;
-adult   = 3;
-senior  = 4;
+child = struct;
+child.comp_chance = 0.2;
+child.connectivity = 100;
+child.heal_chance = 0.3;
 
-citizens = Person(0);
+teen = struct;
+teen.comp_chance = 0.1;
+teen.connectivity = 200;
+teen.heal_chance = 0.2;
 
-% if ~(exist('citizens.mat','file') == 2)
+adult = struct;
+adult.comp_chance = 0.3;
+adult.connectivity = 150;
+adult.heal_chance = 0.1;
+
+senior = struct;
+senior.comp_chance = 0.7;
+senior.connectivity = 100;
+senior.heal_chance = 0.05;
+
+sick = zeros(1, ithaca_pop);
+vaccinated = zeros(1, ithaca_pop);
+healed = zeros(1, ithaca_pop);
+hospitalized = zeros(1, ithaca_pop);
+% connections = zeros(max([child.connectivity, teen.connectivity, adult.connectivity, senior.connectivity]), ithaca_pop);
+
 for i = 1:ithaca_pop
   if i <= num_children
-    citizens(i) = Person(child);
+    connections{i} = zeros(child.connectivity);
   elseif i <= (num_children + num_teens)
-    citizens(i) = Person(teen);
+    connections{i} = zeros(teen.connectivity);
   elseif i <= (num_children + num_teens + num_adults)
-    citizens(i) = Person(adult);
+    connections{i} = zeros(adult.connectivity);
   else
-    citizens(i) = Person(senior);
+    connections{i} = zeros(senior.connectivity);
   end
 end
 
-for i = citizens
-  while length(i.connections) < i.connectivity
+for i = 1:ithaca_pop
+  n = 1;
+  while n <= length(connections{i})
     random_citizen = round(rand*(ithaca_pop -1)) + 1;
-    if length(citizens(random_citizen)) < citizens(random_citizen).connectivity
-      citizens(random_citizen).connections(length(citizens(random_citizen))) = i.findobj;
-      i.connections(length(i.connections) + 1) = citizens(random_citizen).findobj;
+    if ~all(connections{random_citizen})
+      connections{random_citizen}(find(connections{random_citizen} == 0, 1)) = i;
+      connections{i}(n) = random_citizen;
+      n = n + 1;
     end
+  end
+  if ~mod(i, 100)
+    disp(i)
   end
 end
 
