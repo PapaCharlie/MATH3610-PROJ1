@@ -7,16 +7,16 @@ vaccines = 4000;
 init_sick = 100;
 
 % Census data for age ranges
-num_children = ithaca_pop/10;
-num_teens = 2*ithaca_pop/5;
-num_adults = 2*ithaca_pop/5;
-num_seniors = ithaca_pop/10;
+num_children  = ithaca_pop/10;
+num_teens     = 2*ithaca_pop/5;
+num_adults    = 2*ithaca_pop/5;
+num_seniors   = ithaca_pop/10;
 
 % Values to pass to person classdef
-child = 1;
-teen = 2;
-adult = 3;
-senior = 4;
+child   = 1;
+teen    = 2;
+adult   = 3;
+senior  = 4;
 
 citizens = Person(0);
 
@@ -47,12 +47,13 @@ for i = 1:init_sick
   citizens(random_citizen).is_sick = true;
 end
 
-days = 20;
+months = 20;
 
-for d = 1:days
+for d = 1:months
   for citizen = citizens
     citizen.step();
   end
+
 end
 
 num_sick = 0;

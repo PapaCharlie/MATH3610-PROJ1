@@ -4,13 +4,13 @@ SRC := $(wildcard *.tex)
 PDF := $(SRC:.tex=.pdf)
 
 ifeq ($(OS),Windows_NT)
-	pdflatexflags := "-aux-directory=_build"
+	pdflatexflags := "-aux-directory=.build"
 else
-	pdflatexflags := -output-directory=_build
+	pdflatexflags := -output-directory=.build
 endif
 
 all:
-	-mkdir _build
+	-mkdir .build
 	-rm $(PDF)
 	for t in $(SRC) ; do \
 		pdflatex -shell-escape $(pdflatexflags) $$t ; \
@@ -19,9 +19,9 @@ all:
 
 clean:
 	-rm $(PDF)
-	-rm -rf _build/*
+	-rm -rf .build/*
 
 links:
 	-rm $(PDF)
-	ln -s _build/*.pdf .
+	ln -s .build/*.pdf .
 
