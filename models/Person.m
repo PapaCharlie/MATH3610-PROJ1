@@ -34,22 +34,22 @@ classdef Person < handle
       end
     end
 
-    function step(self)
-      if self.is_sick
-        if rand < self.heal_chance
-          self.is_sick = false;
-          self.was_sick = true;
-        elseif rand < self.comp_chance
-          self.is_hospitalized = true;
-        else
-          for citizen = self.connections
-            if and(~citizen.is_vaccinated, and(~citizen.was_sick, ~citizen.is_sick))
-              citizen.is_sick = rand < 0.25; % randomly infect connection
-            end
-          end
-        end
-      end
-    end
+    % function step(self)
+    %   if self.is_sick
+    %     if rand < self.heal_chance
+    %       self.is_sick = false;
+    %       self.was_sick = true;
+    %     elseif rand < self.comp_chance
+    %       self.is_hospitalized = true;
+    %     else
+    %       for citizen = self.connections
+    %         if and(~citizen.is_vaccinated, and(~citizen.was_sick, ~citizen.is_sick))
+    %           citizen.is_sick = rand < 0.25; % randomly infect connection
+    %         end
+    %       end
+    %     end
+    %   end
+    % end
 
   end
 end
