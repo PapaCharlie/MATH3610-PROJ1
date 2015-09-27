@@ -20,7 +20,6 @@ senior  = 4;
 
 citizens = Person(0);
 
-% if ~(exist('citizens.mat','file') == 2)
 for i = 1:ithaca_pop
   if i <= num_children
     citizens(i) = Person(child);
@@ -33,20 +32,30 @@ for i = 1:ithaca_pop
   end
 end
 
-for i = citizens
-  while length(i.connections) < i.connectivity
-    random_citizen = round(rand*(ithaca_pop -1)) + 1;
-    if length(citizens(random_citizen)) < citizens(random_citizen).connectivity
-      citizens(random_citizen).connections(length(citizens(random_citizen))) = i.findobj;
-      i.connections(length(i.connections) + 1) = citizens(random_citizen).findobj;
-    end
-  end
-end
+% if ~(exist('mapping.mat','file') == 2)
+%   for i = 1:length(citizens)
+%     mapping{i} = ones(1, citizens(i).connectivity);
+%     while length(citizens(i).connections) < citizens(i).connectivity
+%       random_citizen = round(rand*(ithaca_pop -1)) + 1;
+%       if length(citizens(random_citizen)) < citizens(random_citizen).connectivity
+%         citizens(random_citizen).connections(length(citizens(random_citizen))) = citizens(i).findobj;
+%         citizens(i).connections(length(citizens(i).connections) + 1) = citizens(random_citizen).findobj;
+%         mapping{i}(length(citizens(i).connections)) = random_citizen;
+%       end
+%     end
+%   end
 
-%   save 'citizens.mat' citizens;
+%   save 'mapping.mat' mapping;
 % else
-%   load 'citizens.mat';
+%   load 'mapping.mat';
+%   for i = 1:length(mapping)
+%     for n = 1:length(mapping{i})
+%       citizens(i).connections(n) = citizens(mapping{i}(n)).findobj;
+%     end
+%   end
 % end
+
+disp('Finished creating network.')
 
 % for i = 1:init_sick
 %   random_citizen = round(rand*(ithaca_pop -1)) + 1;

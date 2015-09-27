@@ -8,7 +8,7 @@ classdef Person < handle
     heal_chance       % Chance to heal after a given day
     comp_chance       % Chance of complications due to sickness
     connectivity      % Number of people exposed to in a given day
-    connections = Person.empty(0) % People connected to (sizeof(connections) == connectivity)
+    connections = Person.empty(0) % People connected to (length(connections) == connectivity)
   end
 
   methods
