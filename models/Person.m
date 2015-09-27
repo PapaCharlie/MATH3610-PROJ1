@@ -8,7 +8,7 @@ classdef Person < handle
     heal_chance       % Chance to heal after a given day
     comp_chance       % Chance of complications due to sickness
     connectivity      % Number of people exposed to in a given day
-    connections = Person.empty(0) % People connected to (length(connections) == connectivity)
+    become_sick = false
   end
 
   methods
@@ -16,40 +16,24 @@ classdef Person < handle
       this.age = age;
       switch age
         case 1
-          this.comp_chance = 0.2;
-          this.connectivity = 100;
+          this.comp_chance = 0.1;
+          this.connectivity = 175;
           this.heal_chance = 0.3;
         case 2
-          this.comp_chance = 0.1;
+          this.comp_chance = 0.05;
           this.connectivity = 200;
           this.heal_chance = 0.2;
         case 3
-          this.comp_chance = 0.3;
+          this.comp_chance = 0.2;
           this.connectivity = 150;
           this.heal_chance = 0.1;
         case 4
-          this.comp_chance = 0.7;
-          this.connectivity = 100;
+          this.comp_chance = 0.4;
+          this.connectivity = 75;
           this.heal_chance = 0.05;
       end
+      % this.connectivity = this.connectivity * 2;
+      this.comp_chance = this.comp_chance / 10;
     end
-
-    function step(self)
-      if self.is_sick
-        if rand < self.heal_chance
-          self.is_sick = false;
-          self.was_sick = true;
-        elseif rand < self.comp_chance
-          self.is_hospitalized = true;
-        else
-          for citizen = self.connections
-            if and(~citizen.is_vaccinated, and(~citizen.was_sick, ~citizen.is_sick))
-              citizen.is_sick = rand < 0.25; % randomly infect connection
-            end
-          end
-        end
-      end
-    end
-
   end
 end
