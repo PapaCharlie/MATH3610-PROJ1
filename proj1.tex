@@ -12,7 +12,6 @@
 \fancyhead{}
 \fancyfoot{}
 \rfoot{\thepage}
-\lfoot{\includegraphics[height=20pt]{Logo}}
 
 \usepackage{float}
 \usepackage{listings, color, times, textcomp, float}
@@ -158,20 +157,7 @@ Therefore, the model is valid as long as:
 
 \[ K \geq S + r_v t \]
 
-\begin{tikzpicture}[scale=2.0]
-	\coordinate[label=below:{$0$}] (origin) at (0,0);
-	\draw[<->, thick] (0,2) node (saxis) [above] {$S$}
-	|- (3,0) node (taxis) [right] {$t$};
-	
-	\coordinate[label=left:{$K$}] (sintercept) at (0,1.5);
-	\coordinate[label=below:{$\frac{K}{r_v}$}] (tintercept) at (2.2,0);
-	\draw (sintercept) -- (tintercept);
-	\fill[gray!20, opacity=0.8] (origin) -- (sintercept) -- (tintercept) -- cycle;
-
-	\draw[dotted] (sintercept) -- (3.0, 1.5);
-	\node (valid) at (0.7,0.4) {Valid Region};
-	\node (endregion) at (2.3, 1.0) {No-Change Region};
-\end{tikzpicture}
+\includegraphics[width=0.5\textwidth]{figures/admissible-region.pdf}
 
 In the above figure, once $S(t)$ hits the diagonal line,
 	it stays horizontal and keeps its value.
@@ -217,24 +203,44 @@ Each curve starts with an initial condition at 5 percent of the
 	population, and the growth rate determines how many people
 	overall are infected.
 
-\paragraph{}
-\pgfplotstableread[col sep = comma]{data/s.csv}\mydata
-\begin{tikzpicture}
-	\begin{axis}[
-		legend pos = south east,
-		xmin = 0,
-		xmax = 6,
-		ymin = 0,
-		ymax = 1.3,
-		ylabel = {$S(t)$ (units of total population)},
-		xlabel = {$t$}
-	]
-	\foreach \index in {1, ..., 35} {%
-		\addplot[mark=""] table[x index = {0}, y index = {\index}]{\mydata};
-	}
-	\addplot[mark=""] {1 - x * 0.2};
-	\end{axis}
-\end{tikzpicture}
-\paragraph{}
+\includegraphics[width=0.5\textwidth]{figures/vaccination-model-curves-varying-s.pdf}
+
+
+\subsection{Pareto Optimizing Between Two Independent Populations}
+
+The model above modeled how one population responds to a combination
+	of disease spreading and vaccines.
+The model depends on $K$, the total population, $S(0)$, the initial
+	number of sick people, $r$, the rate of infection growth, 
+	and $r_v$, the vaccination rate.
+Of these parameters, in a real world setting, we can expect to know $K$
+	very precicely from census data, approximate $S(0)$ as small,
+	have very little idea about $r$, and control $r_v$.
+
+I want to extend this problem to two independant populations. 
+Each population will get different sets of constants,
+	$K_1$ and $K_2$, $S_1(0)$ and $S_2(0)$, $r_1$ and $r_2$.
+The goal will be to figure out how to optimally allocate the
+	vaccines between the two populations.
+The decision variable, $d$, will be the fraction of the total vaccination
+	rate I allocate to each population.
+Population 1 will be vaccinated at a rate $d r_v$, while population
+	2 will be vaccinated at a rate $(1 - d) r_v$.
+In this model, I try to minimize the final number of sick people in
+	each population.
+This will give me a pareto front.
+
+The following collection of pareto fronts comes from keeping the disease
+	growth rate the same for both, and varying its magnitude.
+
+\includegraphics[width=0.5\textwidth]{figures/vaccination-model-same-r-pareto-curves.pdf}
+
+This collection of pareto fronts comes from keeping the growth
+	rate for population 2 the same, and varying the growth
+	rate of population 1.
+
+\includegraphics[width=0.5\textwidth]{figures/vaccination-model-different-r-pareto-curves.pdf}
+
+
 
 \end{document}
