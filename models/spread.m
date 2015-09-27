@@ -38,7 +38,7 @@ for c = citizens(round(rand(1,init_sick)*(ithaca_pop -1)) + 1)
 end
 
 deltas = 10;
-months = 10;
+months = 3;
 sick_per_delta = zeros(1 + months*deltas, 5);
 
 for c = citizens
@@ -63,26 +63,26 @@ for d = 1:months*deltas
   end
   for citizen = citizens
     if citizen.is_sick
-      if rand < (citizen.heal_chance/deltas)
+      if (rand < (citizen.heal_chance/deltas))
         citizen.is_sick = false;
         citizen.was_sick = true;
-      elseif rand < (citizen.comp_chance/deltas)
+      elseif (rand < (citizen.comp_chance/deltas))
         citizen.is_sick = false;
         citizen.is_hospitalized = true;
       else
+        % random_citizens = normrnd();
         for c = citizens(round(rand(1,citizen.connectivity)*(ithaca_pop -1)) + 1)
-          % if ~c.is_vaccinated && ~c.was_sick && ~c.is_sick
-          c.become_sick = c.become_sick || 1;% rand < (1/deltas);
-          % end
+          if (~c.is_vaccinated && ~c.was_sick && ~c.is_sick)
+            c.become_sick = (c.become_sick || rand < (0.25/deltas));
+          end
         end
       end
     end
   end
   for c = citizens
-    if citizen.become_sick
-      disp('infect')
-      citizen.is_sick = true;
-      citizen.become_sick = false;
+    if c.become_sick
+      c.is_sick = true;
+      c.become_sick = false;
     end
   end
   for c = citizens
@@ -94,7 +94,7 @@ for d = 1:months*deltas
   end
 end
 
-disp('Plotting')
+disp('Plotting');
 
 f = figure('units', 'normalized', 'outerposition', [0 0 1 1]);
 bar(0:(1/deltas):months, sick_per_delta, 'stacked');
