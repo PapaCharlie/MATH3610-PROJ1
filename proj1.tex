@@ -34,6 +34,8 @@ literate={~} {\texttildelow}{1}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0.5pt}
 
+\DeclareMathOperator\erf{erf}
+
 \begin{document}
 \maketitle
 \thispagestyle{fancy}
@@ -154,7 +156,26 @@ Therefore, the model is valid as long as:
 
 \[ K \geq S + r_v t \]
 
-We have now made these differential equations independant:
+\begin{tikzpicture}[scale=2.0]
+	\coordinate[label=below:{$0$}] (origin) at (0,0);
+	\draw[<->, thick] (0,2) node (saxis) [above] {$S$}
+	|- (3,0) node (taxis) [right] {$t$};
+	
+	\coordinate[label=left:{$K$}] (sintercept) at (0,1.5);
+	\coordinate[label=below:{$\frac{K}{r_v}$}] (tintercept) at (2.2,0);
+	\draw (sintercept) -- (tintercept);
+	\fill[gray!20, opacity=0.8] (origin) -- (sintercept) -- (tintercept) -- cycle;
+
+	\draw[dotted] (sintercept) -- (3.0, 1.5);
+	\node (valid) at (0.7,0.4) {Valid Region};
+	\node (endregion) at (2.3, 1.0) {No-Change Region};
+\end{tikzpicture}
+
+In the above figure, once $S(t)$ hits the diagonal line,
+	it stays horizontal and keeps its value.
+
+We have now made these differential equations independant,
+	within the model's zone of validity:
 
 \begin{align*}
 \frac{dS}{dt} & = r S \left( K - S - r_v t \right)\\
@@ -162,6 +183,29 @@ We have now made these differential equations independant:
 \frac{dV}{dt} & = r_v t
 \end{align*}
 
+We present a solution for $S(t)$:
+
+\begin{align}
+S(t) & = 
+	\frac{e^{ r t (K - \frac{ r_v t}{2})}}
+	{\frac{1}{S(0)} + \sqrt{\frac{\pi r}{2 r_v}}
+		e^{\frac12 \left( \frac{r}{r_v} \right) K^2}
+		\left(\erf\left(  \sqrt{\frac{r}{2 r_v}} (r_v t - K ) \right)
+			- \erf\left( - \sqrt{\frac{r}{2 r_v}} K \right) \right)}
+\end{align}
+
+From the above expression for the boundary of the valid region,
+	we get the following implicit expression for $t_f, S(t_f)$
+
+\begin{align}
+S(t_f) = 
+	\frac{e^{ r t_f (K - \frac{ r_v t_f }{2})}}
+	{\frac{1}{S(0)} + \sqrt{\frac{\pi r}{2 r_v}}
+		e^{\frac12 \left( \frac{r}{r_v} \right) K^2}
+		\left(\erf\left(  \sqrt{\frac{r}{2 r_v}} (r_v t_f - K ) \right)
+			- \erf\left( - \sqrt{\frac{r}{2 r_v}} K \right) \right)}
+	& = K - r_v t_f 
+\end{align}
 
 
 \end{document}
