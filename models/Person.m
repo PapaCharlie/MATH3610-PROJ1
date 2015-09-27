@@ -1,5 +1,6 @@
 classdef Person < handle
   properties
+    age
     is_sick = false
     is_vaccinated = false
     is_hospitalized = false % If complications encur, move to hospital, stop infecting other people
@@ -12,23 +13,24 @@ classdef Person < handle
 
   methods
     function this = Person(age)
+      this.age = age;
       switch age
         case 1
           this.comp_chance = 0.2;
-          this.connectivity = 20;
-          this.heal_chance = 0.5;
+          this.connectivity = 100;
+          this.heal_chance = 0.3;
         case 2
           this.comp_chance = 0.1;
-          this.connectivity = 30;
-          this.heal_chance = 0.4;
+          this.connectivity = 200;
+          this.heal_chance = 0.2;
         case 3
           this.comp_chance = 0.3;
-          this.connectivity = 25;
-          this.heal_chance = 0.3;
+          this.connectivity = 150;
+          this.heal_chance = 0.1;
         case 4
           this.comp_chance = 0.7;
-          this.connectivity = 10;
-          this.heal_chance = 0.2;
+          this.connectivity = 100;
+          this.heal_chance = 0.05;
       end
     end
 
@@ -41,8 +43,8 @@ classdef Person < handle
           self.is_hospitalized = true;
         else
           for citizen = self.connections
-            if and(~citizen.is_vaccinated, and(~self.was_sick, ~self.is_sick))
-              citizen.is_sick = round(rand); % randomly infect connection
+            if and(~citizen.is_vaccinated, and(~citizen.was_sick, ~citizen.is_sick))
+              citizen.is_sick = rand < 0.25; % randomly infect connection
             end
           end
         end
