@@ -92,41 +92,45 @@ We include this derivation of the logistic model for disease spread
 	to compare with our derivation of the modified logistic model
 	for disease spread and vaccination.
 
-Suppose there are two groups of people, with $S$ representing the number of 
-	sick people, and $H$ represnting the number of healthy people.
+Suppose there are two groups of people, with $I$ representing the number of 
+	infected people, and $S$ represnting the number of people seceptible for the
+	disease.
 Suppose the probability of a single healthy person becoming sick is proportional
 	only to the total number of sick people.
-Since there are $H$ healthy people, the expected number of healthy people
-	who become sick should be proportional to $S H$.
+Since there are $S$ healthy people, the expected number of healthy people
+	who become sick should be proportional to $S I$.
 This model does not take into account recovery from sickness.
 If we introduce a parameter $r$, we can express this relationship as a system
 	of differential equations:
 
 \begin{align*}
-\frac{dH}{dt} & = - r S H \\
-\frac{dS}{dt} & = r S H \\
+\frac{dI}{dt} & = - r S I \\
+\frac{dS}{dt} & = r S I \\
 \end{align*}
 
-Notice that the total number of people, $S + H$, is conserved, i.e.,
+Notice that the total number of people, $S + I$, is conserved, i.e.,
 
-\[ \frac{d}{dt} \left( S + H \right) = \frac{dS}{dt} + \frac{dH}{dt}
-	= r S H - r S H = 0 \]
+\[ \frac{d}{dt} \left( S + I \right) = \frac{dS}{dt} + \frac{dI}{dt}
+	= r S I - r S I = 0 \]
 
 If we introduce another parameter, $K$, to represent the total population,
-	such that $S + H = K$ for all time, then the differential equations
+	such that $S + I = K$ for all time, then the differential equations
 	can be decoupled:
 
 \begin{align*}
-\frac{dH}{dt} & = - r (K - H) H \\
+\frac{dI}{dt} & = - r (K - I) I \\
 \frac{dS}{dt} & = r S (K - S) \\
 \end{align*}
 
-These are two independant logistic models.
+The two differential equations shown here are now two independant, uncoupled
+	differential equations which we can solve seperately.
 
 \subsection{Diease Spread with Vaccine}
 
-Suppose we introduce a third group, $V$, representing people who are vaccinated	
-	against the disease.
+Suppose we introduce a third group, $V$ for vaccinate, representing people who are 
+	immune from the diesease.
+Right now, the only way to become immune is through vaccination,
+	but we may add recovery in subsequent models.
 Suppose we randomly vaccinate members of the healthy population,
 	a constant number each time step.
 This introduces a third parameter, $r_v$, the rate of vaccinations.
@@ -134,8 +138,8 @@ The vaccinated population isn't seceptible to the disease.
 This process is modeled by the following system of diffential equations:
 
 \begin{align*}
-\frac{dS}{dt} & = r S H \\
-\frac{dH}{dt} & = - r S H - r_v \\
+\frac{dI}{dt} & = r S I \\
+\frac{dS}{dt} & = - r S I - r_v \\
 \frac{dV}{dt} & = r_v
 \end{align*}
 
@@ -150,31 +154,31 @@ The number of vaccinated people as a function of time is:
 
 \[ V(t) = r_v t \]
 
-Again, we find the conserved quantity $\left( S + H + V \right)$ and
+Again, we find the conserved quantity $\left( S + I + V \right)$ and
 	name it $K$.
-For the model to be valid, we need $H = K - S - V \geq 0$.
+For the model to be valid, we need $S = K - I - V \geq 0$.
 Therefore, the model is valid as long as:
 
-\[ K \geq S + r_v t \]
+\[ K \geq I + r_v t \]
 
 \includegraphics[width=0.5\textwidth]{figures/admissible-region.pdf}
 
-In the above figure, once $S(t)$ hits the diagonal line,
+In the above figure, once $I(t)$ hits the diagonal line,
 	it stays horizontal and keeps its value.
 
 We have now made these differential equations independant,
 	within the model's zone of validity:
 
 \begin{align*}
-\frac{dS}{dt} & = r S \left( K - S - r_v t \right)\\
-\frac{dH}{dt} & = - r H \left( K - H - r_v t \right) - r_v \\
+\frac{dI}{dt} & = r I \left( K - I - r_v t \right)\\
+\frac{dS}{dt} & = - r S \left( K - S - r_v t \right) - r_v \\
 \frac{dV}{dt} & = r_v t
 \end{align*}
 
-We present a solution for $S(t)$ \cite{walph}:
+We present a solution for $I(t)$ \cite{walph}:
 
 \begin{align}
-S(t) & = 
+I(t) & = 
 	\frac{e^{ r t (K - \frac{ r_v t}{2})}}
 	{\frac{1}{S(0)} + \sqrt{\frac{\pi r}{2 r_v}}
 		e^{\frac12 \left( \frac{r}{r_v} \right) K^2}
@@ -183,10 +187,10 @@ S(t) & =
 \end{align}
 
 From the above expression for the boundary of the valid region,
-	we get the following implicit expression for $t_f, S(t_f)$
+	we get the following implicit expression for $t_f, I(t_f)$
 
 \begin{align}
-S(t_f) = 
+I(t_f) = 
 	\frac{e^{ r t_f (K - \frac{ r_v t_f }{2})}}
 	{\frac{1}{S(0)} + \sqrt{\frac{\pi r}{2 r_v}}
 		e^{\frac12 \left( \frac{r}{r_v} \right) K^2}
@@ -195,7 +199,7 @@ S(t_f) =
 	& = K - r_v t_f 
 \end{align}
 
-Here is a family of values of $S(t)$.
+Here is a family of values of $I(t)$.
 The total population and the rate of distributing vaccines are
 	held constant, while each curve corresponds to a different
 	value of the growth rate constant.
@@ -210,16 +214,16 @@ Each curve starts with an initial condition at 5 percent of the
 
 The model above modeled how one population responds to a combination
 	of disease spreading and vaccines.
-The model depends on $K$, the total population, $S(0)$, the initial
+The model depends on $K$, the total population, $I(0)$, the initial
 	number of sick people, $r$, the rate of infection growth, 
 	and $r_v$, the vaccination rate.
 Of these parameters, in a real world setting, we can expect to know $K$
-	very precicely from census data, approximate $S(0)$ as small,
+	very precicely from census data, approximate $I(0)$ as small,
 	have very little idea about $r$, and control $r_v$.
 
 I want to extend this problem to two independant populations. 
 Each population will get different sets of constants,
-	$K_1$ and $K_2$, $S_1(0)$ and $S_2(0)$, $r_1$ and $r_2$.
+	$K_1$ and $K_2$, $I_1(0)$ and $I_2(0)$, $r_1$ and $r_2$.
 The goal will be to figure out how to optimally allocate the
 	vaccines between the two populations.
 The decision variable, $d$, will be the fraction of the total vaccination
