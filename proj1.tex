@@ -104,8 +104,8 @@ If we introduce a parameter $r$, we can express this relationship as a system
 	of differential equations:
 
 \begin{align*}
-\frac{dI}{dt} & = - r S I \\
-\frac{dS}{dt} & = r S I \\
+\frac{dS}{dt} & = - r S I \\
+\frac{dI}{dt} & = r S I \\
 \end{align*}
 
 Notice that the total number of people, $S + I$, is conserved, i.e.,
@@ -118,12 +118,30 @@ If we introduce another parameter, $K$, to represent the total population,
 	can be decoupled:
 
 \begin{align*}
-\frac{dI}{dt} & = - r (K - I) I \\
-\frac{dS}{dt} & = r S (K - S) \\
+\frac{dS}{dt} & = - r S (K - S) \\
+\frac{dI}{dt} & = r (K - I) I \\
 \end{align*}
 
 The two differential equations shown here are now two independant, uncoupled
 	differential equations which we can solve seperately.
+
+\subsubsection{Nondimensionalizing the Model}
+
+It would be helpful to make all of the constants dimensionless parameters.
+This will give us insight into the different scales that the model works at.
+
+To turn $I$ into a dimensionless parameter, we can divide by $K$.
+
+\begin{align*}
+\frac{d\left(\frac{I}{K}\right)}{dt} 
+	& = \left( r K \right) \left( \frac{I}{K} \right) \left( 1 - \frac{I}{K} \right)\\
+\frac{d\widetilde{I}}{dt} 
+	& = \widetilde{r} \widetilde{I} \left( 1 - \widetilde{I} \right) 
+\end{align*}
+
+This shows that the dynamics of $I$ do not depend on its size.
+For each value of the dimensionless constant $\widetilde{r}$,
+	we determine the behavior from it.
 
 \subsection{Diease Spread with Vaccine}
 
