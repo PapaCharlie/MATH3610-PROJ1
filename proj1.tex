@@ -263,13 +263,41 @@ This collection of pareto fronts comes from keeping the growth
 
 \includegraphics[width=0.5\textwidth]{figures/vaccination-model-different-r-pareto-curves.pdf}
 
+\subsection{Disease Spread between Coupled Populations}
+
+Consider three populations, with two connected only by an intermediate
+	one.
+
+
+\begin{align*}
+\frac{d\widetilde{I}_1}{dt} & = \left( \left( r_{11} K_1 \right) \widetilde{I}_1 
+			+ \left( r_{12} K_2 \right)  \widetilde{I}_2 \right)
+		\left( 1 - \widetilde{I}_1 - \left( \frac{\alpha_1}{K_1} \right) t \right)\\
+\frac{d\widetilde{I}_2}{dt} & = \left( \left( r_{22} K_2 \right) \widetilde{I}_2 
+			+ \left( r_{21} K_1 \right)  \widetilde{I}_1 
+			+ \left( r_{23} K_3 \right) \widetilde{I}_3 \right)
+		\left( 1 - \widetilde{I}_2 - \left( \frac{\alpha_2}{K_2} \right) t \right)\\
+\frac{d\widetilde{I}_3}{dt} & = \left( \left( r_{33} K_3 \right) \widetilde{I}_3 
+			+ \left( r_{32} K_2 \right)  \widetilde{I}_2 \right)
+		\left( 1 - \widetilde{I}_3 - \left( \frac{\alpha_3}{K_3} \right) t \right)
+\end{align*}
+
+If the second population is relatively small, then we might be able to 
+	decrease the total number of infections by focusing our entire efforts
+	on the smallest population to cut the link between the two populations.
+We then treat the vaccination problem as a pareto optimization problem, to distribute
+	the vaccines amongst the two populations.
+However this may not be better than splitting the vaccinations between the two.
+
+
 \begin{thebibliography}{9}
 \bibitem{walph}
 	Wolfram Research Inc.,
 	\emph{WolframAlpha},
 	Retrieved September 26, 2015
-	http://www.wolframalpha.com/input/?i=%E2%88%AB+e^%28-a+x^2+%2B+b+x%29+dx
-	http://www.wolframalpha.com/input/?i=ds%2Fdt+%3D+r+s+%28K+-+s+-+a+t%29
+	http://www.wolframalpha.com/input/?i=\%E2\%88\%AB+e\^\%28-a+x\^2+\%2B+b+x\%29+dx
+	http://www.wolframalpha.com/input/?i=ds\%2Fdt+\%3D+r+s+\%28K+-+s+-+a+t\%29
 \end{thebibliography}
+
 
 \end{document}
