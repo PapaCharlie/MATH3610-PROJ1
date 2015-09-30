@@ -9,32 +9,28 @@ function people = random_vaccine(age, len)
   global adult_center;
   global senior_center;
 
+  num_people = [num_juniors, num_adults, num_seniors];
+  offset = [0, num_juniors, num_juniors + num_adults];
+
   if nargin == 1
-    switch age
-      case 1
-        people = min(ithaca_pop, max(1, round(normrnd(junior_center, num_juniors/4))));
-      case 2
-        people = min(ithaca_pop, max(1, round(normrnd(adult_center, num_adults))));
-      case 3
-        people = min(ithaca_pop, max(1, round(normrnd(senior_center, num_seniors/2))));
+    if rand < 0.75
+      people = round(rand*(num_people(age)-1)) + 1 + offset(age);
+    elseif rand < 0.5
+      people = round(rand*(num_people(mod(age + 1, 3) + 1)-1)) + 1 + offset(mod(age + 1, 3) + 1);
+    else
+      people = round(rand*(num_people(mod(age + 2, 3) + 1)-1)) + 1 + offset(mod(age + 2, 3) + 1);
     end
   else
     switch age
       case 1
-        ppl = round(normrnd(junior_center, num_juniors/2, 1, len));
-        ppl(ppl < 1) = 1;
-        ppl(ppl > ithaca_pop) = ithaca_pop;
-        people = ppl;
+        ppl = round(raylrnd(junior_center, 1, len));
       case 2
         ppl = round(normrnd(adult_center, num_adults, 1, len));
-        ppl(ppl < 1) = 1;
-        ppl(ppl > ithaca_pop) = ithaca_pop;
-        people = ppl;
       case 3
-        ppl = round(normrnd(senior_center, num_seniors/2, 1, len));
-        ppl(ppl < 1) = 1;
-        ppl(ppl > ithaca_pop) = ithaca_pop;
-        people = ppl;
+        ppl = round(ithaca_pop - raylrnd(senior_center, 1, len));
     end
+    ppl(ppl < 1) = 1;
+    ppl(ppl > ithaca_pop) = ithaca_pop;
+    people = ppl;
   end
 end

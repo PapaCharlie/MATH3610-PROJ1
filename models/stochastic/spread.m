@@ -1,4 +1,4 @@
-function [peak, hosps] = spread(age_range, div, p)
+function [peak, hosps, sick_per_delta] = spread(age_range, div, p)
   if nargin == 1
     div = 10;
     p = false;
@@ -22,7 +22,7 @@ function [peak, hosps] = spread(age_range, div, p)
   ithaca_pop = ithaca_pop/div;
   vaccines = vaccines/div;
 
-  init_sick = ithaca_pop/50;
+  init_sick = ithaca_pop/20;
 
   % Census data for age ranges
   num_juniors   = 0.6*ithaca_pop;
@@ -33,79 +33,107 @@ function [peak, hosps] = spread(age_range, div, p)
   adult_center    = num_juniors + num_adults/2;
   senior_center   = num_juniors + num_adults + num_seniors/2;
 
-  citizens = Person(0);
+  heal_chance = 0.5;
+
+  age = zeros(1, ithaca_pop);
+  sick = zeros(1, ithaca_pop);
+  hospitalized = zeros(1, ithaca_pop);
+  vaccinated = zeros(1, ithaca_pop);
+
+  function v = ifelse(c, t, f)
+    if c
+      v = t;
+    else
+      v = f;
+    end
+  end
+
+  function conn = connectivity(age)
+    switch age
+      case 1
+        conn = 50/div;
+      case 2
+        conn = 30/div;
+      case 3
+        conn = 10/div;
+    end
+  end
+
+  function comp = comp_chance(age)
+    switch age
+      case 1
+        comp = 0.05;
+      case 2
+        comp = 0.2;
+      case 3
+        comp = 0.75;
+    end
+    % comp = 0.95;
+  end
 
   for i = 1:ithaca_pop
     if i <= num_juniors
-      citizens(i) = Person(1);
+      age(i) = 1;
     elseif i <= (num_juniors + num_adults)
-      citizens(i) = Person(2);
+      age(i) = 2;
     else
-      citizens(i) = Person(3);
+      age(i) = 3;
     end
   end
 
-  for c = citizens(round(rand(1,init_sick)*(ithaca_pop - 1)) + 1)
-    c.is_sick = true;
+  weeks = 12; % 3 months
+  sick_per_delta = zeros(1 + weeks, 4);
+
+  for c = round(rand(1,init_sick)*(ithaca_pop - 1)) + 1
+    sick(c) = true;
+    sick_per_delta(1, age(c) + 1) = sick_per_delta(1, age(c) + 1) + 1;
   end
 
-  deltas = 5;
-  weeks = 6; % 3 months
-  sick_per_delta = zeros(1 + weeks*deltas, 4);
-
-  for c = citizens
-    if c.is_sick
-      sick_per_delta(1, c.age + 1) = sick_per_delta(1, c.age + 1) + 1;
-    end
-  end
-
-  for d = 1:weeks*deltas
-    % if ~mod(d, deltas)
-    %   disp(sprintf('Week: %d',d/deltas));
-    % end
-    vaccinated = 0;
-    while vaccinated ~= (vaccines/deltas)
-      random_citizen = random_vaccine(age_range);
-      if ~citizens(random_citizen).is_sick && ~citizens(random_citizen).is_vaccinated
-        citizens(random_citizen).is_vaccinated = true;
-        vaccinated = vaccinated + 1;
+  n = 1;
+  for w = 1:weeks
+    disp(sprintf('Week: %d', w));
+    vax = 0;
+    for k = ifelse(age_range == 1, 1:ithaca_pop, ithaca_pop:-1:1)
+      if ~vaccinated(k)
+        vaccinated(k) = true;
+        vax = vax + 1;
+      end
+      if vax == vaccines
+        break
       end
     end
-    for citizen = citizens
-      if citizen.is_sick
-        if (rand < (citizen.heal_chance/deltas))
-          citizen.is_sick = false;
-          citizen.was_sick = true;
-        elseif (rand < (citizen.comp_chance/deltas))
-          citizen.is_sick = false;
-          citizen.is_hospitalized = true;
+    for c = 1:ithaca_pop
+      if sick(c)
+        if (rand < heal_chance)
+          sick(c) = false;
+          vaccinated(c) = true;
+        elseif (rand < comp_chance(age(c)))
+          sick(c) = false;
+          hospitalized(c) = true;
         else
-          for c = citizens(random_vaccine(citizen.age, citizen.connectivity))
-            if (~c.is_vaccinated && ~c.was_sick && ~c.is_sick)
-              c.become_sick = (c.become_sick || rand < (0.5/deltas));
+          for r = random_vaccine(age(c), connectivity(age(c)))
+            if (~vaccinated(r) && ~sick(r))
+              sick(r) = (sick(r) || rand < 0.8);
             end
           end
         end
       end
     end
-    for c = citizens
-      if c.become_sick
-        c.is_sick = true;
-        c.become_sick = false;
+    n = n+1;
+    stats = zeros(1, 4);
+    for c = 1:ithaca_pop
+      if sick(c)
+        stats(age(c) + 1) = stats(age(c) + 1) + 1;
+      elseif hospitalized(c)
+        stats(1) = stats(1) + 1;
       end
     end
-    for c = citizens
-      if c.is_sick
-        sick_per_delta(d+1, c.age + 1) = sick_per_delta(d+1, c.age + 1) + 1;
-      elseif c.is_hospitalized
-        sick_per_delta(d + 1, 1) = sick_per_delta(d + 1, 1) + 1;
-      end
-    end
+    sick_per_delta(n,:) = stats;
   end
 
   if p
     f = figure('units', 'normalized', 'outerposition', [0 0 1 1]);
-    hBar = bar(0:(1/deltas):weeks, sick_per_delta, 'stacked');
+    hBar = bar(0:weeks, sick_per_delta, 'stacked');
     colormap([0 0 0; 1 0 0; 0 1 0; 1 1 0]);
     legend('Hospitalized', 'Juniors', 'Adults', 'Seniors');
     title(sprintf('Weekly spread of flu, 500 initally infected. Total hospitalizations: %d', sick_per_delta(length(sick_per_delta(:,1)), 1)));
@@ -117,6 +145,6 @@ function [peak, hosps] = spread(age_range, div, p)
 
   peak = round(max(sum(sick_per_delta'))/ithaca_pop,4)*100;
   hosps = sick_per_delta(size(sick_per_delta,1), 1);
-  disp(sprintf('Peak infection rate: %f', peak));
+  disp(sprintf('Peak infection rate: %.2f', peak));
   disp(sprintf('Total hospitalizations: %d', hosps));
 end
