@@ -263,6 +263,32 @@ This collection of pareto fronts comes from keeping the growth
 
 \includegraphics[width=0.5\textwidth]{figures/vaccination-model-different-r-pareto-curves.pdf}
 
+\subsection{Disease Spread between Coupled Populations}
+
+Consider three populations, with two connected only by an intermediate
+	one.
+
+
+\begin{align*}
+\frac{d\widetilde{I}_1}{dt} & = \left( \left( r_{11} K_1 \right) \widetilde{I}_1 
+			+ \left( r_{12} K_2 \right)  \widetilde{I}_2 \right)
+		\left( 1 - \widetilde{I}_1 - \left( \frac{\alpha_1}{K_1} \right) t \right)\\
+\frac{d\widetilde{I}_2}{dt} & = \left( \left( r_{22} K_2 \right) \widetilde{I}_2 
+			+ \left( r_{21} K_1 \right)  \widetilde{I}_1 
+			+ \left( r_{23} K_3 \right) \widetilde{I}_3 \right)
+		\left( 1 - \widetilde{I}_2 - \left( \frac{\alpha_2}{K_2} \right) t \right)\\
+\frac{d\widetilde{I}_3}{dt} & = \left( \left( r_{33} K_3 \right) \widetilde{I}_3 
+			+ \left( r_{32} K_2 \right)  \widetilde{I}_2 \right)
+		\left( 1 - \widetilde{I}_3 - \left( \frac{\alpha_3}{K_3} \right) t \right)
+\end{align*}
+
+If the second population is relatively small, then we might be able to 
+	decrease the total number of infections by focusing our entire efforts
+	on the smallest population to cut the link between the two populations.
+We then treat the vaccination problem as a pareto optimization problem, to distribute
+	the vaccines amongst the two populations.
+However this may not be better than splitting the vaccinations between the two.
+
 \section{Stochastic Model}
 \subsection{A naive model}
 \par At first, we made a simple, arbitrary stochastic model just to get a rough idea of how the disease would spread. Over the course of 5 months, we would look at the spread of the disease given certain conditions. Every citizen fell into an age category, according to demographic figures from \emph{areaConnect} \cite{areconnect}. Then, to model the spread, we associated arbitrary recovery rates, complication rates and number of people talked to per month to each age group, giving us the following table:
@@ -308,8 +334,9 @@ Seniors & 0.75 & 25 & 10\%
 	Wolfram Research Inc.,
 	\emph{WolframAlpha},
 	Retrieved September 26, 2015
-	\url{http://www.wolframalpha.com/input/?i=ds%2Fdt+%3D+r+s+%28K+-+s+-+a+t%29}
-	\url{http://www.wolframalpha.com/input/?i=%E2%88%AB+e^%28-a+x^2+%2B+b+x%29+dx}
+	\url{http://www.wolframalpha.com/input/?i=\%E2\%88\%AB+e\^\%28-a+x\^2+\%2B+b+x\%29+dx}
+	\url{http://www.wolframalpha.com/input/?i=ds\%2Fdt+\%3D+r+s+\%28K+-+s+-+a+t\%29}
 \end{thebibliography}
+
 
 \end{document}
