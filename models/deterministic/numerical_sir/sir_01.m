@@ -1,7 +1,7 @@
 clc; close all; clear;
-%====================%
-% Standard SIR model %
-%====================%
+%===========%
+% SIR model %
+%===========%
 
 % ----- Model Parameters ----- %
 s0 = .95;
@@ -15,7 +15,7 @@ beta = R0 * nu;
 % ---------------------------- %
 
 t0 = 0;
-tf = 12;
+tf = 8;
 y0 = [s0;i0;r0];
 [T,Y] = ode45(@(t,y) sir_update_01(y, beta, nu), [t0, tf], y0);
 
