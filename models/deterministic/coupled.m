@@ -11,7 +11,9 @@ global ak1 = 0.4;
 global ak2 = 0.3;
 global ak3 = 0.1;
 
-function derivs = f( I, t)
+pkg load odepkg
+
+function derivs = f( t, I)
 	global r11; global r12; global r21;
 	global r22; global r23; global r32;
 	global r33; global ak1; global ak2;
@@ -24,7 +26,8 @@ function derivs = f( I, t)
 end
 
 T = linspace(0,6);
-X = lsode(@f, [0.02; 1e-8; 1e-8], T);
+[J, X] = ode45(@f, T, [0.02; 1e-8; 1e-8]);
+X
 i = 1;
 while (i < length(T)) && (X(i,1) + ak1 * T(i) < 1) && (X(i,2) + ak2 * T(i) < 1) && (X(i,3) + ak3 * T(i) < 1)
 	i= i + 1;
