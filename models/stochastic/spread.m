@@ -25,12 +25,11 @@ function [peak, hosps] = spread(age_range, div, p)
   init_sick = ithaca_pop/50;
 
   % Census data for age ranges
-  % num_babies    = 0.03*ithaca_pop;
   num_juniors   = 0.6*ithaca_pop;
   num_adults    = 0.3*ithaca_pop;
   num_seniors   = 0.1*ithaca_pop;
 
-  junior_center   = num_juniors/4; % Center the norm closer to babies
+  junior_center   = num_juniors/2;
   adult_center    = num_juniors + num_adults/2;
   senior_center   = num_juniors + num_adults + num_seniors/2;
 

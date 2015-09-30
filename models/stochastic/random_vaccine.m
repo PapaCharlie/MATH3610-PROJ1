@@ -21,7 +21,7 @@ function people = random_vaccine(age, len)
   else
     switch age
       case 1
-        ppl = round(normrnd(junior_center, num_juniors/4, 1, len));
+        ppl = round(normrnd(junior_center, num_juniors/2, 1, len));
         ppl(ppl < 1) = 1;
         ppl(ppl > ithaca_pop) = ithaca_pop;
         people = ppl;
