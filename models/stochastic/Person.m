@@ -17,16 +17,16 @@ classdef Person < handle
       switch age
         case 1
           this.comp_chance = 0.05;
-          this.connectivity = 200;
-          this.heal_chance = 0.5;
+          this.connectivity = 100;
+          this.heal_chance = 0.95;
         case 2
           this.comp_chance = 0.1;
-          this.connectivity = 150;
-          this.heal_chance = 0.3;
+          this.connectivity = 50;
+          this.heal_chance = 0.8;
         case 3
-          this.comp_chance = 0.6;
-          this.connectivity = 75;
-          this.heal_chance = 0.2;
+          this.comp_chance = 0.75;
+          this.connectivity = 10;
+          this.heal_chance = 0.5;
       end
     end
   end
