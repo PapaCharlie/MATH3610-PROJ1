@@ -32,7 +32,7 @@
 	\end{itemize}
 	Therefore, a particular distribution of vaccines is considered better if it saves more lives and prevents more suffering. 
 
-\section{Deterministic Model}
+\section{Deterministic SIR Model}
 \subsection{Algorithm and Assumptions}
 	Our initial research on epidemiology discovered a common model known as the SIR approach \cite{stanford}. In this model, the population is segmented into three compartments that represent susceptible, infected, and removed states. This model assumes:
 	\begin{itemize}
@@ -68,7 +68,7 @@
 	\[
 		\frac{d\delta}{dt} = \mu i
 	\]
-	Here, $\mu$ is the death rate, and $\delta$ is the fraction of the population that has died from the swine flu. Therefore, this adds a fourth compartment, where a sick person can either recover or die. The final parameter necessary to model vaccination strategies on a homogeneous population is the vaccination rate itself. When this is added, the system becomes:
+	Here, $\mu$ is the death rate, and $\delta$ is the fraction of the population that has died from the swine flu. Therefore, this adds a fourth compartment, where a sick person can either recover or die. The final parameter necessary to model vaccination strategies on a homogeneous population is the vaccination rate itself. When this is added, the system becomes\cite{asu}:
 	\[
 		\frac{ds}{dt} = - \beta s i - \nu
 	\]
@@ -110,19 +110,11 @@
 \subsection{Future Work}
 	//TODO
 
+\section{Deterministically Allocating Vaccines Between Disjoint Populations}
+	Chris's stuff goes here
+
 \section{Stochastic Model}
-\subsection{Algorithm and Assumptions}
-	//TODO
-\subsection{Parameter Justifications}
-	//TODO
-\subsection{Predictions}
-	//TODO
-\subsection{Validation and Robustness Testing}
-	//TODO
-\subsection{Strengths and Weaknesses}
-	//TODO
-\subsection{Future Work}
-	//TODO
+	Paul's stuff goes here
 
 \section{Conclusions}
 	//TODO
@@ -140,6 +132,8 @@
 		\url{http://www.wolframalpha.com/input/?i=%E2%88%AB+e^%28-a+x^2+%2B+b+x%29+dx}
 	\bibitem{stanford}
 		\url{http://web.stanford.edu/~jhj1/teachingdocs/Jones-on-R0.pdf}
+	\bibitem{asu}
+		\url{http://www.public.asu.edu/~hnesse/classes/sirv.html?Alpha=0.3&Beta=0.9&Nu=0.}
 	\end{thebibliography}
 
 \section{Source Code}
