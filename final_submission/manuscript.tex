@@ -532,10 +532,12 @@ Here are a handful of runs for different vaccination strategies:
 	\label{fig:modelout}
 \end{figure}
 
-Which unfortunately doesn't look promising.
+Which unfortunately doesn't look promising. When the disease is twenty times as deadly, hospitalization rates scale up accordingly, and vaccination policies keep their effectiveness.
 
 \subsection{Analysis}
-\par As we saw in Figure~\ref{fig:modelout}, vaccination policies don't actually impact the spread of the disease too much. Rather, it seems to be more helpful for damage control. We see from the 4 graphs in Figure~\ref{fig:modelout} the peak infection rate seems to stay near 10\% regardless of the vaccination policy. On the other hand, it seems to help for damage control because even though the infection rate stays the same, when we vaccinate more seniors, fewer people end up hospitalized than when we target more juniors. But surprisingly, the random vaccination policy consistently came out on top. This peaked our interest, so we ran many simulations comparing the three models. Figure~\ref{fig:10outs} shows the outputs side by side. We see that the random policy actually puts just about as many people in the hospital as the policy that targets seniors, while keeping the peak infection rate actually lower than all the policies.
+\par As we saw in Figure~\ref{fig:modelout}, vaccination policies don't actually impact the spread of the disease too much. Rather, it seems to be more helpful for damage control. We see from the 4 graphs in Figure~\ref{fig:modelout} the peak infection rate seems to stay near 10\% regardless of the vaccination policy. On the other hand, it seems to help for damage control because even though the infection rate stays the same, when we vaccinate more seniors, fewer people end up hospitalized than when we target more juniors. But surprisingly, the random vaccination policy consistently came out on top. This peaked our interest, so we ran many simulations comparing the three models. Figure~\ref{fig:10outs} shows the outputs side by side. We see that the random policy actually puts just about as many people in the hospital as the policy that targets seniors, while keeping the peak infection rate actually lower than all the policies. When the disease is deadlier, all models agree that the random policy is better than all.
+\par Consensus on how long a given epidemic should last is about 2 months, and it seems that our model agrees, so we can at least verify that it decently approximates a real spread.
+\par Part of the reason why the different methods don't have such a different outcome seems to be that the disease simply spreads too fast. Long before enough vaccinations can be handed out, the infection has spread too far for it to be slowed down.
 
 \begin{figure}[h!]
 \centering
