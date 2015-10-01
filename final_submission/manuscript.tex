@@ -222,7 +222,7 @@ literate={~} {\texttildelow}{1}}
 
             0.0263    7.4504    3.3864    0.1356
     \end{lstlisting}
-    Running this with vaccine distributions (.1, .4, .4, .1) and $\mu = \mu * 20$results in the following MATLAB output:
+    Running this with vaccine distributions (.1, .4, .4, .1) and $\mu = \mu * 20$ results in the following MATLAB output:
 
      \begin{lstlisting}
         total_deaths =
@@ -237,7 +237,7 @@ literate={~} {\texttildelow}{1}}
             0.0389    7.0522    3.0919    0.1685
     \end{lstlisting}
 
-    Running this with vaccine distributions (.4, .1, .1, .4) and $\mu = \mu * 20$results in the following MATLAB output:
+    Running this with vaccine distributions (.4, .1, .1, .4) and $\mu = \mu * 20$ results in the following MATLAB output:
 
     \begin{lstlisting}
         total_deaths =
@@ -251,8 +251,8 @@ literate={~} {\texttildelow}{1}}
 
             0.0263    7.4485    3.3857    0.1356
     \end{lstlisting}
-% \subsection{Analysis of Model (robustness)}
-% 	//TODO
+    \subsection{Analysis of Model}
+	 This model suffer from being dependent upon too many parameters, and it is hard to come up with an optimal vaccine distribution. Tweaking the parameters a little bit can have a drastic effect on the model, and it relies too much on our research being accurate. In the future I would search for a pareto optimal distribution. Also, I would fix the assumption of a linear vaccination rate so we are not wasting vaccines on a completely vaccinated population, and can test getting all infants out of the way at the beginning.
 % \subsection{Strengths and Weaknesses}
 % 	//TODO
 % \subsection{Future Work}
