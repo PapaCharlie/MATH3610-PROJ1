@@ -89,22 +89,22 @@ function [peak, hosps, sick_per_delta, hospitalized] = spread(age_range, p)
   for w = 1:weeks
     disp(sprintf('Week: %d', w));
     vax = 0;
-    for k = ifelse(age_range == 1, 1:ithaca_pop, ithaca_pop:-1:1)
-      if ~vaccinated(k)
-        vaccinated(k) = true;
-        vax = vax + 1;
-      end
-      if vax == vaccines
-        break
-      end
-    end
-    % while vax ~= vaccines
-    %   r = round(rand*(ithaca_pop-1))+1;
-    %   if ~vaccinated(r)
-    %     vaccinated(r) = true;
+    % for k = ifelse(age_range == 1, 1:ithaca_pop, ithaca_pop:-1:1)
+    %   if ~vaccinated(k)
+    %     vaccinated(k) = true;
     %     vax = vax + 1;
     %   end
+    %   if vax == vaccines
+    %     break
+    %   end
     % end
+    while vax ~= vaccines
+      r = round(rand*(ithaca_pop-1))+1;
+      if ~vaccinated(r)
+        vaccinated(r) = true;
+        vax = vax + 1;
+      end
+    end
     for c = 1:ithaca_pop
       if sick(c)
         if (rand < heal_chance)
