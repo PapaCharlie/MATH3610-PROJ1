@@ -270,6 +270,9 @@ In the preceding model, once people became infected, they stayed
 The following model adds a parameter, the ``curing rate'' $\gamma$,
 	which represents the rate at which individuals in the sick population
 	recover (and join the removed population).
+This will be the inverse of the time spent sick, which is on average
+	1 week \cite{CIC-stats}.
+The value of the interaction parameter $\beta$ is determined in \textbf{PLACEHOLDER}
 This model is the SIR model, and has standard parameters:
 
 \begin{align*}
@@ -310,31 +313,34 @@ The pareto-optimal points are when 71-84\% of the vaccine goes to the
 	and when 15-20\% of the vaccine goes to the cornellians
 	and 80-85\% of the vaccine goes to the ithacans.
 
-\subsection{Disease Spread between Coupled Populations}
+\subsection{Coupling the Populations}
 
-Consider three populations, with two connected only by an intermediate
-	one.
-
+Consider the following modifications to the model, to add interactions.
+Let $\alpha$ be the interaction coefficient.
+$\alpha$ should be approximately a fraction of $\beta$.
+For example, if a member of one population is one tenth as likely
+	to interact with the other as with one from their own population,
+	the value for $\alpha$ would be $\frac{\beta}{10}$.
+It represents how likely the seceptible of $i$ are to be infected by the
+	infected of $j$.
 
 \begin{align*}
-\frac{d\widetilde{I}_1}{dt} & = \left( \left( r_{11} K_1 \right) \widetilde{I}_1
-			+ \left( r_{12} K_2 \right)  \widetilde{I}_2 \right)
-		\left( 1 - \widetilde{I}_1 - \left( \frac{\alpha_1}{K_1} \right) t \right)\\
-\frac{d\widetilde{I}_2}{dt} & = \left( \left( r_{22} K_2 \right) \widetilde{I}_2
-			+ \left( r_{21} K_1 \right)  \widetilde{I}_1
-			+ \left( r_{23} K_3 \right) \widetilde{I}_3 \right)
-		\left( 1 - \widetilde{I}_2 - \left( \frac{\alpha_2}{K_2} \right) t \right)\\
-\frac{d\widetilde{I}_3}{dt} & = \left( \left( r_{33} K_3 \right) \widetilde{I}_3
-			+ \left( r_{32} K_2 \right)  \widetilde{I}_2 \right)
-		\left( 1 - \widetilde{I}_3 - \left( \frac{\alpha_3}{K_3} \right) t \right)
+\frac{dI_1}{dt} & = \frac{ \beta S_1 I_1}{N_1} + \frac{ \alpha S_1 I_2 }{N_2} - \gamma I_1\\
+\frac{dS_1}{dt} & = -\frac{\beta S_1 I_1}{N_1}  - \frac{ \alpha S_1 I_2 }{N_2} - r_v \\
+\frac{dR_1}{dt} & = r_v + \gamma I_1 \\
+\frac{dI_2}{dt} & = \frac{ \beta S_2 I_2}{N}  + \frac{ \alpha S_2 I_1 }{N_1} - \gamma I_2\\
+\frac{dS_2}{dt} & = -\frac{\beta S_2 I_2}{N}  - \frac{ \alpha S_2 I_1 }{N_1} - r_v \\
+\frac{dR_2}{dt} & = r_v + \gamma I_2
 \end{align*}
 
-If the second population is relatively small, then we might be able to
-	decrease the total number of infections by focusing our entire efforts
-	on the smallest population to cut the link between the two populations.
-We then treat the vaccination problem as a pareto optimization problem, to distribute
-	the vaccines amongst the two populations.
-However this may not be better than splitting the vaccinations between the two.
+This model, in the fully interacting case, produces the following pareto curve:
+
+\includegraphics[width=0.5\textwidth]{figures/sir-interacting.pdf}
+
+This doesn't show a significant variance across different immunization strategies.
+It seems like vaccinating one population, and then the other, is a reasonable
+	immunization strategy.
+If we want to be in the middle, that is alright.
 
 \section{Stochastic Model}
 \subsection{A naive model}
@@ -487,6 +493,14 @@ Mean & 9.787 & 382.9
 \bibitem{cornellpop}
 	https://www.cornell.edu/about/facts.cfm
 \end{thebibliography}
+
+\lstinputlisting{models/stochastic/spread.m}
+\lstinputlisting{models/stochastic/random_vaccine.m}
+\lstinputlisting{models/deterministic/numerical_sir/sir_04.m}
+\lstinputlisting{models/deterministic/numerical_sir/sir_update_04.m}
+\lstinputlisting{models/deterministic/sir-two-coupled.m}
+\lstinputlisting{models/deterministic/logistic-newton-s-investigation.m}
+\lstinputlisting{models/deterministic/logistic-newton-s-investigation.m}
 
 
 \end{document}

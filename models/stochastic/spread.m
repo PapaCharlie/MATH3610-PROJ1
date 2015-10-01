@@ -148,7 +148,7 @@ function [peak, hosps, sick_per_delta, hospitalized] = spread(age_range, p)
     xlabel('Weeks');
     ylabel('Infections');
     xlim([0 weeks]);
-    saveas(f, 'Monthly sick', 'png');
+    saveas(f, 'Weekly sick', 'png');
   end
 
   disp(sprintf('Peak infection rate: %.2f', peak));
