@@ -133,15 +133,52 @@ literate={~} {\texttildelow}{1}}
 
 	We used MATLAB's built in ode45 solver on this system of equations to compute the fractions of susceptible, infected, recovered, and dead individuals for each sub-segment of the population over time.
 \subsection{Parameter Justifications}
-	//TODO
+	An important dependent parameter for modeling epidemics is known as the Basic Reproduction rate \cite{SIR}. This quantity is:
+	\[
+		R_0 = r c d
+	\]
+	Where $r$ is the probability of an infection given contact between a susceptible and infected individual, $c$ is the average rate of contact between susceptible and infected individuals, and $d$ is the duration of infectiousness \cite{SIR}. This $R_0$ value can be used to compute our $\beta$ value in the SIR model. Because we need the number of infected individuals to increase for the basic SIR model, we have:
+	\[
+		\frac{di}{dt} = \beta s i - \gamma i > 0
+	\]
+	\[
+		\frac{\beta s i}{\gamma} > i
+	\]
+	\begin{center}
+		$s \approx 1$ at the start of the epidemic
+	\end{center}
+	\[
+		\frac{\beta}{\gamma} = R_0 > 1
+	\]
+	This is then the relationship between $\beta$ and $R_0$ \cite{SIR}. We can compute $\gamma$ if we define it to be $1/d$, the duration of infectiousness \cite{SIR}. The fact that we assume this duration of infectiousness to be the same across all ages is why we see a constant recovery rate $\gamma$.The average duration of infectiousness for swine flu is one week \cite{oneweek}(.25 months), and the Basic Reproduction Number is 1.5 \cite{R0}, so we have $\gamma = 4$ and $\beta = 6$ in the standard SIR model. When data was first being collected in the 2009 outbreak of the swine flu, approximately 7\% of the population was infected \cite{init}, so we began our SIR model at s = .95 and r = .05. Finally, in order to set the death rate for the homogeneous SIR model, we discovered that of approximately 60.8 million infections in 2009, 12,469 resulted in deaths \cite{deathpercent}. Dividing this fraction between 12 months leads to $\mu = 0.00001709$
+
+    For the more complicated SIR model, however, single parameter values do not work because we have four distinct sub-populations. These sub-populations were chosen based on the following bar chart:
+
+	\begin{figure}[h!]
+	\centering
+		\includegraphics[width=.5\textwidth]{figures/death_graph.png}
+        \caption{Mortality rates by age group \cite{deathgraph}}
+	\end{figure}
+
+    Here you can see that the death rate is relatively constant from age 25-64, so we grouped these ranges together into the ``adults'' category. The $\mu$ value for each sub-population was simply these numbers scaled by the global $\mu$ found above. The fractions of the total population that each of these sub-groups occupied \cite{pop} was found to be (.0248, .6058, 3066, .0628). Finally, the single $\beta$ had to be derived from a Next Generation Matrix. This is an equivalent of the $B0$ value for multiple sub-populations with transitions between each. This is defined to be that the jth column represents the average number of infections of individuals of type i from an individual of type j \cite{SIR}. These values were largely hand-picked for the 4 sub-population model, but we tried not to deviate too far from 1.5.
+    \[
+        R0 = 
+        \begin{bmatrix}
+        3.00 & 0.10 & 0.10 & 0.10 \\
+        0.10 & 3.00 & 1.00 & 0.10 \\
+        2.00 & 2.00 & 1.50 & 1.00 \\
+        0.10 & 0.10 & 0.50 & 1.00
+        \end{bmatrix}
+    \]
+
 \subsection{Predictions}
 	//TODO
-\subsection{Validation and Robustness Testing}
-	//TODO
-\subsection{Strengths and Weaknesses}
-	//TODO
-\subsection{Future Work}
-	//TODO
+% \subsection{Validation and Robustness Testing}
+% 	//TODO
+% \subsection{Strengths and Weaknesses}
+% 	//TODO
+% \subsection{Future Work}
+% 	//TODO
 
 \section{Deterministically Allocating Vaccines Between Disjoint Populations}
 	Chris's stuff goes here
@@ -149,7 +186,7 @@ literate={~} {\texttildelow}{1}}
 \section{Stochastic Model}
 	Paul's stuff goes here
 
-\section{Conclusions}
+\section{Conclusion}
 	//TODO
 \section{References}
 	\begin{thebibliography}{9}
@@ -164,11 +201,23 @@ literate={~} {\texttildelow}{1}}
 		\url{http://www.wolframalpha.com/input/?i=ds%2Fdt+%3D+r+s+%28K+-+s+-+a+t%29}
 		\url{http://www.wolframalpha.com/input/?i=%E2%88%AB+e^%28-a+x^2+%2B+b+x%29+dx}
 	\bibitem{SIR}
-		\url{http://web.SIR.edu/~jhj1/teachingdocs/Jones-on-R0.pdf}
+		\url{http://web.stanford.edu/~jhj1/teachingdocs/Jones-on-R0.pdf}
 	\bibitem{applet}
 		\url{http://www.public.asu.edu/~hnesse/classes/sirv.html?}
 	\bibitem{NGM}
 		\url{http://rsif.royalsocietypublishing.org/content/7/47/873}
+	\bibitem{oneweek}
+		\url{https://www.cdph.ca.gov/HealthInfo/h1n1flufaqs/Pages/H1N1fluFAQs-01-GenInfo.aspx}
+	\bibitem{R0}
+		\url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2715422/}
+	\bibitem{deathgraph}
+		\url{http://www.cdc.gov/h1n1flu/surveillanceqa.htm}
+    \bibitem{init}
+        \url{http://academic.udayton.edu/muhammadusman/2010Stander/H1N1.pdf}
+    \bibitem{deathpercent}
+        \url{http://www.cdc.gov/h1n1flu/estimates_2009_h1n1.htm}
+    \bibitem{pop}
+        \url{http://ithaca.areaconnect.com/statistics.htm}
 	\end{thebibliography}
 
 \section{Source Code}
