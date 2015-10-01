@@ -192,6 +192,65 @@ literate={~} {\texttildelow}{1}}
     \end{figure}
 
     The fraction of deaths remains small for all populations so it is not plotted. The total number of person-months of suffering is the integral of the green curve.
+
+    Running this with vaccine distributions (.1, .4, .4, .1) results in the following MATLAB output:
+
+    \begin{lstlisting}
+        total_deaths =
+
+            0.0030    0.2532    0.0529    0.0049
+
+
+        total_suffering =
+
+            1.0e+03 *
+
+            0.0389    7.0540    3.0925    0.1686
+    \end{lstlisting}
+
+    Running this with vaccine distributions (.4, .1, .1, .4) results in the following MATLAB output:
+
+    \begin{lstlisting}
+        total_deaths =
+
+            0.0020    0.2674    0.0579    0.0039
+
+
+        total_suffering =
+
+            1.0e+03 *
+
+            0.0263    7.4504    3.3864    0.1356
+    \end{lstlisting}
+    Running this with vaccine distributions (.1, .4, .4, .1) and $\mu = \mu * 20$results in the following MATLAB output:
+
+     \begin{lstlisting}
+        total_deaths =
+
+            0.0598    5.0633    1.0570    0.0979
+
+
+        total_suffering =
+
+            1.0e+03 *
+
+            0.0389    7.0522    3.0919    0.1685
+    \end{lstlisting}
+
+    Running this with vaccine distributions (.4, .1, .1, .4) and $\mu = \mu * 20$results in the following MATLAB output:
+
+    \begin{lstlisting}
+        total_deaths =
+
+            0.0403    5.3464    1.1572    0.0787
+
+
+        total_suffering =
+
+            1.0e+03 *
+
+            0.0263    7.4485    3.3857    0.1356
+    \end{lstlisting}
 % \subsection{Analysis of Model (robustness)}
 % 	//TODO
 % \subsection{Strengths and Weaknesses}
