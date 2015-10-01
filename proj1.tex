@@ -14,7 +14,7 @@
 \rfoot{\thepage}
 
 \usepackage{float}
-\usepackage{listings, color, times, textcomp, float, hyperref, subfigure}
+\usepackage{listings, color, times, textcomp, float, hyperref, subcaption}
 \definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
 \definecolor{mylilas}{RGB}{170,55,241}
 \lstset{language=Matlab, basicstyle=\scriptsize\ttfamily,breaklines=true,frame=single,morekeywords={matlab2tikz},
@@ -263,31 +263,84 @@ This collection of pareto fronts comes from keeping the growth
 
 \includegraphics[width=0.5\textwidth]{figures/vaccination-model-different-r-pareto-curves.pdf}
 
-\subsection{Disease Spread between Coupled Populations}
+\subsection{Improved Model}
 
-Consider three populations, with two connected only by an intermediate
-	one.
-
+In the preceding model, once people became infected, they stayed
+	infected for the duration of the run.
+The following model adds a parameter, the ``curing rate'' $\gamma$,
+	which represents the rate at which individuals in the sick population
+	recover (and join the removed population).
+This will be the inverse of the time spent sick, which is on average 
+	1 week \cite{CIC-stats}.
+The value of the interaction parameter $\beta$ is determined in \textbf{PLACEHOLDER}
+This model is the SIR model, and has standard parameters:
 
 \begin{align*}
-\frac{d\widetilde{I}_1}{dt} & = \left( \left( r_{11} K_1 \right) \widetilde{I}_1 
-			+ \left( r_{12} K_2 \right)  \widetilde{I}_2 \right)
-		\left( 1 - \widetilde{I}_1 - \left( \frac{\alpha_1}{K_1} \right) t \right)\\
-\frac{d\widetilde{I}_2}{dt} & = \left( \left( r_{22} K_2 \right) \widetilde{I}_2 
-			+ \left( r_{21} K_1 \right)  \widetilde{I}_1 
-			+ \left( r_{23} K_3 \right) \widetilde{I}_3 \right)
-		\left( 1 - \widetilde{I}_2 - \left( \frac{\alpha_2}{K_2} \right) t \right)\\
-\frac{d\widetilde{I}_3}{dt} & = \left( \left( r_{33} K_3 \right) \widetilde{I}_3 
-			+ \left( r_{32} K_2 \right)  \widetilde{I}_2 \right)
-		\left( 1 - \widetilde{I}_3 - \left( \frac{\alpha_3}{K_3} \right) t \right)
+\frac{dI}{dt} & = \frac{ \beta S I}{N} - \gamma I\\
+\frac{dS}{dt} & = -\frac{\beta S I}{N} - r_v \\
+\frac{dR}{dt} & = r_v + \gamma I 
 \end{align*}
 
-If the second population is relatively small, then we might be able to 
-	decrease the total number of infections by focusing our entire efforts
-	on the smallest population to cut the link between the two populations.
-We then treat the vaccination problem as a pareto optimization problem, to distribute
-	the vaccines amongst the two populations.
-However this may not be better than splitting the vaccinations between the two.
+We can use this model for pareto optimization.
+Cornell's population is about 21,000 \cite{cornellpop},
+	while ithaca's population is about 30,000 \cite{census}.
+Given a rate of vaccine distribution, by integrating the equations
+	we can determine how many total infections there are.
+If we had 4000 vaccinations to distribute, we can make a pareto
+	curve by plotting the set of points corresponding to different
+	relative distributions of the vaccinations.
+
+If one of the populations vaccinates all of its seceptible individuals
+	before the other, we need to decide what to do with the vaccines
+	that it is not consuming.
+If we choose not to redistribute them, the pareto curve looks like this:
+
+\includegraphics[width=0.5\textwidth]{figures/sir-pareto.pdf}
+
+If we choose to redistribute them, for $\beta = 6$ and $\gamma = 4$,
+	the curve looks like this:
+
+\includegraphics[width=0.5\textwidth]{figures/sir-pareto-top.pdf}
+
+And the pareto curve looks like:
+
+\includegraphics[width=0.5\textwidth]{figures/sir-pareto-top-pareto.pdf}
+
+We conclude that making sure that all of the vaccines are allocated is very
+	important for any vaccine model, noting the difference.
+The pareto-optimal points are when 71-84\% of the vaccine goes to the
+	cornellians and 29-16\% goes to the ithacans, 
+	and when 15-20\% of the vaccine goes to the cornellians 
+	and 80-85\% of the vaccine goes to the ithacans.
+
+\subsection{Coupling the Populations}
+
+Consider the following modifications to the model, to add interactions.
+Let $\alpha$ be the interaction coefficient.
+$\alpha$ should be approximately a fraction of $\beta$.
+For example, if a member of one population is one tenth as likely
+	to interact with the other as with one from their own population,
+	the value for $\alpha$ would be $\frac{\beta}{10}$.
+It represents how likely the seceptible of $i$ are to be infected by the
+	infected of $j$.
+
+\begin{align*}
+\frac{dI_1}{dt} & = \frac{ \beta S_1 I_1}{N_1} + \frac{ \alpha S_1 I_2 }{N_2} - \gamma I_1\\
+\frac{dS_1}{dt} & = -\frac{\beta S_1 I_1}{N_1}  - \frac{ \alpha S_1 I_2 }{N_2} - r_v \\
+\frac{dR_1}{dt} & = r_v + \gamma I_1 \\
+\frac{dI_2}{dt} & = \frac{ \beta S_2 I_2}{N}  + \frac{ \alpha S_2 I_1 }{N_1} - \gamma I_2\\
+\frac{dS_2}{dt} & = -\frac{\beta S_2 I_2}{N}  - \frac{ \alpha S_2 I_1 }{N_1} - r_v \\
+\frac{dR_2}{dt} & = r_v + \gamma I_2 
+\end{align*}
+
+This model, in the fully interacting case, produces the following pareto curve:
+
+\includegraphics[width=0.5\textwidth]{figures/sir-interacting.pdf}
+
+This doesn't show a significant variance across different immunization strategies.
+It seems like vaccinating one population, and then the other, is a reasonable
+	immunization strategy.
+If we want to be in the middle, that is alright.
 
 \section{Stochastic Model}
 \subsection{A naive model}
@@ -306,36 +359,78 @@ Seniors & 0.2 & 0.7 & 10 & 10\%
 \par The Heal rate and Complication chance columns represent the odds of a given citizen to recover from the disease in a month. The Connectivity column represents the number of people each sick citizen has a chance to infect, uniformly sampled from the entire population. We would then infect 500 people initially, and let the simulation run its course. In this particular example, we vaccinate randomly. We also assume that a person who has been sick cannot be sick again, and that when complications arise in a given patient, they are taken to the hospital and do not keep infecting the rest of the population. Here's how the spread of disease looks:
 \begin{figure}[h!]
 \includegraphics[width=\textwidth]{figures/Naive-model.png}
+\caption{Initial model predictions}
 \end{figure}
 The parts of each bars represent the respective number of citizens in a given age group that are sick. The black bars on the bottom represent how many people have been hospitalized so far.
-\par Unfortunately, research and according to a source from the CIC \cite{CIC} exposed many flaws in this model. Mostly the fact that the odds of a given citizen staying sick for more than a month are extremely low, unlike in this model where they are actually quite high. In fact, every age range stays sick for just about the same amount of time, with seniors sick for 2 weeks. The CIC data also exposed something very interesting, which is that seniors are not the ones in the most danger from the flu, kids smaller than the age of 5 are. This gave us reason to use a model that looks at the spread of the disease on a weekly basis.
+\par Unfortunately, research and according to sources from the CIC \cite{CIC-stats} \cite{CIC-qa} exposed many flaws in this model. Mostly the fact that the odds of a given citizen staying sick for more than a month are extremely low, unlike in this model where they are actually quite high. In fact, every age range stays sick for just about the same amount of time, with seniors sick for 2 weeks. The CIC data also exposed something very interesting, which is that seniors are not the ones in the most danger from the flu, kids smaller than the age of 5 are. This gave us reason to use a model that looks at the spread of the disease on a weekly basis.
 
 \subsection{A more justified approach}
-\par As mentioned in earlier, the CIC data gave us a lot to think about in terms of refining this model. First of all, we looked at the effects of the population of children in Ithaca, where children are citizens younger than 5 years of age. Since their risks of complications are so much higher, a good idea would be to immediately vaccinate all of them to avoid a devastating death toll. Fortunately, according to \emph{areaConnect}, there are less than 2,000 children in Ithaca, meaning that they can all be vaccinated as soon as the shipment of vaccines arrives. This also means that we can cut out an entire segment of the population, and generalize citizens younger than 25 years of age to a single slice.
-\par We also have more concrete data on how long citizens stay sick, and the likelihood of complications. Given that all data is given in terms of weeks, we change the model to compute the spread on a weekly basis. For simplicity and rounding, we assume that there are 4 weeks in a month, and that all citizens, regardless of age, have a 90\% of healing every week. According to the CIC, a patient infected by the H1N1 virus is only contagious when showing symptoms. Therefore a citizen only infects other citizens when they are sick. Given what we know about the H1N1 virus and how contagious it is, we take 80\% to be the chance that a sick citizen infects a healthy one, with the 20\% accounting for sanitary precautions like hand sanitizer.
-\par
+\par As mentioned in earlier, the CIC data gave us a lot to think about in terms of refining this model. First of all, we looked at the effects of the population of children in Ithaca, where children are citizens younger than 5 years of age. Since their risks of complications are so much higher, a good idea would be to immediately vaccinate all of them to avoid a devastating death toll. Fortunately, according to \emph{areaConnect}, there are less than 2,000 children in Ithaca, meaning that they can all be vaccinated as soon as the shipment of vaccines arrives. This also means that we can cut out an entire segment of the population, and generalize citizens younger than 25 years of age to a single slice. As a slight additional adaptation, we also make it such that any given citizen is more likely to talk to people from their age slice.
+\par Secondly, we obtained more concrete data on how long citizens stay sick, and the likelihood of complications. The data we found was given in terms of weeks, so we changed the model to compute the spread on a weekly basis. For averaging and rounding, we assumed that there are 4 weeks in a month, and that all citizens, regardless of age, have a 90\% of healing every week. According to the CIC, a patient infected by the H1N1 virus is only contagious when showing symptoms. Therefore a citizen only infects other citizens when they are sick. Given what we know about the H1N1 virus and how contagious it is, we take 80\% to be the chance that a sick citizen infects a healthy one, with the 20\% accounting for sanitary precautions like hand sanitizer (assuming people don't have ``Swine flu Parties'' \cite{CIC-qa}).
+\par With this in mind, we adapted the model such that each age group had the attributes listed in Figure~\ref{fig:justified-values}:
 
 \begin{figure}[H]
-\centering
-\begin{tabular}{c|c|c|c|c}
-Age group & Complication chance & Connectivity & Population percentage\\ \hline
-Junior & 0.05 & 100 & 100\%\\
-Adults & 0.1 & 50 & 50\%\\
-Seniors & 0.75 & 25 & 10\%
-\end{tabular}
+	\centering
+	\begin{tabular}{c|c|c|c|c}
+		Age group & Heal rate & Complication chance & Connectivity & Population percentage\\ \hline
+		Junior & 0.9 & 0.05 & 25 & 60\%\\
+		Adults & 0.9 & 0.2 & 15 & 30\%\\
+		Seniors & 0.9 & 0.75 & 5 & 10\%
+	\end{tabular}
+	\caption{More justified attributes for age groups}
+	\label{fig:justified-values}
 \end{figure}
+
+Here are a handful of runs for different vaccination strategies:
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/Weekly-novax.png}
+		\caption{No vaccination policy}
+	\end{subfigure}~
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/Weekly-randvax.png}
+		\caption{Random vaccination policy}
+	\end{subfigure}\\
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/Weekly-juniors.png}
+		\caption{Prioritization of kids and teens}
+	\end{subfigure}~
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{figures/Weekly-seniors.png}
+		\caption{Prioritization of seniors}
+	\end{subfigure}
+	\caption{Model runs}
+	\label{fig:modelout}
+\end{figure}
+
+Which unfortunately doesn't look promising.
+
+\subsection{An explanation}
+As we saw in Figure~\ref{fig:modelout}
+
 
 \begin{thebibliography}{9}
 \bibitem{areconnect}
 	\url{http://ithaca.areaconnect.com/statistics.htm}
-\bibitem{CIC}
+\bibitem{CIC-stats}
 	\url{http://www.cdc.gov/h1n1flu/surveillanceqa.htm}
+\bibitem{CIC-qa}
+	\url{http://www.cdc.gov/h1n1flu/qa.htm}
 \bibitem{walph}
 	Wolfram Research Inc.,
 	\emph{WolframAlpha},
 	Retrieved September 26, 2015
 	\url{http://www.wolframalpha.com/input/?i=\%E2\%88\%AB+e\^\%28-a+x\^2+\%2B+b+x\%29+dx}
 	\url{http://www.wolframalpha.com/input/?i=ds\%2Fdt+\%3D+r+s+\%28K+-+s+-+a+t\%29}
+\bibitem{census}
+	http://quickfacts.census.gov/qfd/states/36/3638077.html
+\bibitem{cornellpop}
+	https://www.cornell.edu/about/facts.cfm
 \end{thebibliography}
 
 

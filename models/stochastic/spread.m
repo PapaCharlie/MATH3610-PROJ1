@@ -1,8 +1,5 @@
-function [peak, hosps, sick_per_delta] = spread(age_range, div, p)
+function [peak, hosps, sick_per_delta, hospitalized] = spread(age_range, p)
   if nargin == 1
-    div = 10;
-    p = false;
-  elseif nargin == 2
     p = false;
   end
 
@@ -19,8 +16,8 @@ function [peak, hosps, sick_per_delta] = spread(age_range, div, p)
   ithaca_pop = 60000;
   vaccines = 4000/4; % Vaccines per week
 
-  ithaca_pop = ithaca_pop/div;
-  vaccines = vaccines/div;
+  ithaca_pop = ithaca_pop;
+  vaccines = vaccines;
 
   init_sick = ithaca_pop/20;
 
@@ -33,8 +30,7 @@ function [peak, hosps, sick_per_delta] = spread(age_range, div, p)
   adult_center    = num_juniors + num_adults/2;
   senior_center   = num_juniors + num_adults + num_seniors/2;
 
-  heal_chance = 0.5;
-
+  heal_chance = 0.9;
   age = zeros(1, ithaca_pop);
   sick = zeros(1, ithaca_pop);
   hospitalized = zeros(1, ithaca_pop);
@@ -51,11 +47,11 @@ function [peak, hosps, sick_per_delta] = spread(age_range, div, p)
   function conn = connectivity(age)
     switch age
       case 1
-        conn = 50/div;
+        conn = 25;
       case 2
-        conn = 30/div;
+        conn = 15;
       case 3
-        conn = 10/div;
+        conn = 5;
     end
   end
 
@@ -81,7 +77,7 @@ function [peak, hosps, sick_per_delta] = spread(age_range, div, p)
     end
   end
 
-  weeks = 12; % 3 months
+  weeks = 8; % 2 months
   sick_per_delta = zeros(1 + weeks, 4);
 
   for c = round(rand(1,init_sick)*(ithaca_pop - 1)) + 1
@@ -102,6 +98,13 @@ function [peak, hosps, sick_per_delta] = spread(age_range, div, p)
         break
       end
     end
+    % while vax ~= vaccines
+    %   r = round(rand*(ithaca_pop-1))+1;
+    %   if ~vaccinated(r)
+    %     vaccinated(r) = true;
+    %     vax = vax + 1;
+    %   end
+    % end
     for c = 1:ithaca_pop
       if sick(c)
         if (rand < heal_chance)
@@ -131,20 +134,23 @@ function [peak, hosps, sick_per_delta] = spread(age_range, div, p)
     sick_per_delta(n,:) = stats;
   end
 
+  peak = round(max(sum(sick_per_delta'))/ithaca_pop,4)*100;
+  hosps = sick_per_delta(size(sick_per_delta,1), 1);
+
+  close all;
+
   if p
     f = figure('units', 'normalized', 'outerposition', [0 0 1 1]);
     hBar = bar(0:weeks, sick_per_delta, 'stacked');
     colormap([0 0 0; 1 0 0; 0 1 0; 1 1 0]);
     legend('Hospitalized', 'Juniors', 'Adults', 'Seniors');
-    title(sprintf('Weekly spread of flu, 500 initally infected. Total hospitalizations: %d', sick_per_delta(length(sick_per_delta(:,1)), 1)));
+    title(sprintf('Weekly spread of flu, %d initally infected. Total hospitalizations: %d\nPeak infection rate: %.2f', init_sick, hosps, peak));
     xlabel('Weeks');
     ylabel('Infections');
     xlim([0 weeks]);
     saveas(f, 'Monthly sick', 'png');
   end
 
-  peak = round(max(sum(sick_per_delta'))/ithaca_pop,4)*100;
-  hosps = sick_per_delta(size(sick_per_delta,1), 1);
   disp(sprintf('Peak infection rate: %.2f', peak));
   disp(sprintf('Total hospitalizations: %d', hosps));
 end
