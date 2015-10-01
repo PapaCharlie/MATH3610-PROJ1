@@ -1,11 +1,12 @@
 clc; close all; clear;
+pkg load odepkg
 %===========%
 % SIR model %
 %===========%
 
 % ----- Model Parameters ----- %
-s0 = .95;
-i0 = .05;
+s0 = .99;
+i0 = .01;
 r0 = .0;
 
 d = .25;
@@ -24,3 +25,4 @@ plot(T,Y)
 xlabel('Months since outbreak')
 ylabel('Fraction of population')
 legend('Susceptible', 'Infected', 'Removed')
+pause

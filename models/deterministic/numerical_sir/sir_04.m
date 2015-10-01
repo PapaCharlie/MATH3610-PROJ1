@@ -13,23 +13,23 @@ r0 = .0 * demographics;
 d0 = .0 * demographics;
 
 d = .25;
-nu = 1/d;
+gamma = 1/d;
 R0 = [3.00, 0.10, 0.10, 0.10; ...
       0.10, 3.00, 1.00, 0.10; ...
       2.00, 2.00, 1.50, 1.00; ...
       0.10, 0.10, 0.50, 1.00];
-beta = R0 * nu;
+beta = R0 * gamma;
 mu = 0.00001709 * [4.5;2.1;1.0;1.7]; % * 20;
 vaccines = 4000;
 vaccine_distribution = [.25;.25;.25;0];
 vaccine_distribution(4) = 1 - sum(vaccine_distribution);
-gamma = vaccines*vaccine_distribution/N;
+nu = vaccines*vaccine_distribution/N;
 % ---------------------------- %
 
 t0 = 0;
 tf = 8;
 y0 = [s0;i0;r0;d0];
-[T,Y] = ode45(@(t,y) sir_update_04(y, beta, nu, mu, gamma), [t0, tf], y0);
+[T,Y] = ode45(@(t,y) sir_update_04(y, beta, gamma, mu, nu), [t0, tf], y0);
 
 titles = {'Babies & Toddlers', 'School-Aged', 'Adults', 'Elderly'};
 for i = 1:4
