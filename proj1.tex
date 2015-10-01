@@ -263,6 +263,53 @@ This collection of pareto fronts comes from keeping the growth
 
 \includegraphics[width=0.5\textwidth]{figures/vaccination-model-different-r-pareto-curves.pdf}
 
+\subsection{Improved Model}
+
+In the preceding model, once people became infected, they stayed
+	infected for the duration of the run.
+The following model adds a parameter, the ``curing rate'' $\gamma$,
+	which represents the rate at which individuals in the sick population
+	recover (and join the removed population).
+This model is the SIR model, and has standard parameters:
+
+\begin{align*}
+\frac{dI}{dt} & = \frac{ \beta S I}{N} - \gamma I\\
+\frac{dS}{dt} & = -\frac{\beta S I}{N} - r_v \\
+\frac{dR}{dt} & = r_v + \gamma I 
+\end{align*}
+
+We can use this model for pareto optimization.
+Cornell's population is about 21,000 \cite{cornellpop},
+	while ithaca's population is about 30,000 \cite{census}.
+Given a rate of vaccine distribution, by integrating the equations
+	we can determine how many total infections there are.
+If we had 4000 vaccinations to distribute, we can make a pareto
+	curve by plotting the set of points corresponding to different
+	relative distributions of the vaccinations.
+
+If one of the populations vaccinates all of its seceptible individuals
+	before the other, we need to decide what to do with the vaccines
+	that it is not consuming.
+If we choose not to redistribute them, the pareto curve looks like this:
+
+\includegraphics[width=0.5\textwidth]{figures/sir-pareto.pdf}
+
+If we choose to redistribute them, for $\beta = 6$ and $\gamma = 4$,
+	the curve looks like this:
+
+\includegraphics[width=0.5\textwidth]{figures/sir-pareto-top.pdf}
+
+And the pareto curve looks like:
+
+\includegraphics[width=0.5\textwidth]{figures/sir-pareto-top-pareto.pdf}
+
+We conclude that making sure that all of the vaccines are allocated is very
+	important for any vaccine model, noting the difference.
+The pareto-optimal points are when 71-84\% of the vaccine goes to the
+	cornellians and 29-16\% goes to the ithacans, 
+	and when 15-20\% of the vaccine goes to the cornellians 
+	and 80-85\% of the vaccine goes to the ithacans.
+
 \subsection{Disease Spread between Coupled Populations}
 
 Consider three populations, with two connected only by an intermediate
@@ -336,6 +383,10 @@ Seniors & 0.75 & 25 & 10\%
 	Retrieved September 26, 2015
 	\url{http://www.wolframalpha.com/input/?i=\%E2\%88\%AB+e\^\%28-a+x\^2+\%2B+b+x\%29+dx}
 	\url{http://www.wolframalpha.com/input/?i=ds\%2Fdt+\%3D+r+s+\%28K+-+s+-+a+t\%29}
+\bibitem{census}
+	http://quickfacts.census.gov/qfd/states/36/3638077.html
+\bibitem{cornellpop}
+	https://www.cornell.edu/about/facts.cfm
 \end{thebibliography}
 
 
